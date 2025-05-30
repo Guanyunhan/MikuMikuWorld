@@ -86,7 +86,7 @@ std::string getUserLanguageCode() {
         NSString *localeID = [[NSLocale currentLocale] localeIdentifier];
         NSArray<NSString *> *parts = [localeID componentsSeparatedByString:@"_"];
         NSString *langCode = parts.firstObject ?: @"en";
-
+        
         return [langCode UTF8String];
     }
 }
@@ -111,9 +111,9 @@ IO::FileDialogResult showFileDialog( const std::string& title, const std::string
     @autoreleasepool {
         NSSavePanel* savePanel = nil;
         NSOpenPanel* openPanel = nil;
-
+        
         NSSavePanel* panel = nil;
-
+        
         if (type == IO::DialogType::Save) {
             savePanel = [NSSavePanel savePanel];
             panel = savePanel;
@@ -124,35 +124,35 @@ IO::FileDialogResult showFileDialog( const std::string& title, const std::string
             openPanel.allowsMultipleSelection = NO;
             panel = openPanel;
         }
-
+        
         panel.title = [NSString stringWithUTF8String:title.c_str()];
-
+        
         if (!inputFilename.empty()) {
             panel.nameFieldStringValue = [NSString stringWithUTF8String:inputFilename.c_str()];
         }
-
+        
         if (!defaultExtension.empty()) {
             panel.allowedFileTypes = @[ [NSString stringWithUTF8String:defaultExtension.c_str()] ];
         } else if (!filters.empty()) {
             panel.allowedFileTypes = buildAllowedFileTypes(filters);
         }
-
+        
         NSInteger result = [panel runModal];
         if (result == NSModalResponseOK) {
             NSString* path = [[panel URL] path];
             outputFilename = std::string([path UTF8String]);
             return IO::FileDialogResult::OK;
         }
-
+        
         return IO::FileDialogResult::Cancel;
     }
 }
 
 std::string getBuildVersion() {
-	@autoreleasepool {
-		NSString* build = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-		return [build UTF8String];
-	}
+    @autoreleasepool {
+        NSString* build = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+        return [build UTF8String];
+    }
 }
 
 }
